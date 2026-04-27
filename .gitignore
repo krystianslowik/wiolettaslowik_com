@@ -18,3 +18,7 @@ uploads/
 
 # fonts cached by scripts/render-static-assets.mjs
 scripts/.fontcache/
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
