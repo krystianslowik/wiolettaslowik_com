@@ -33,49 +33,37 @@ mkdirSync(fontDir, { recursive: true });
 
 // ---------- font cache -----------------------------------------------
 
-const FONT_CSS_URLS = [
-  "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..500&display=swap",
-  "https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&display=swap",
+// resvg-js (≤2.6) does not parse woff2 reliably. Fetch TTF variable fonts
+// directly from the official Google Fonts repo on GitHub instead.
+const FONT_TTF_URLS = [
+  {
+    name: "Fraunces.ttf",
+    url: "https://github.com/google/fonts/raw/main/ofl/fraunces/Fraunces%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf",
+  },
+  {
+    name: "Fraunces-Italic.ttf",
+    url: "https://github.com/google/fonts/raw/main/ofl/fraunces/Fraunces-Italic%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf",
+  },
+  {
+    name: "GeistMono.ttf",
+    url: "https://github.com/google/fonts/raw/main/ofl/geistmono/GeistMono%5Bwght%5D.ttf",
+  },
 ];
 
-async function fetchText(url) {
-  // Google Fonts serves different font formats based on User-Agent.
-  // A modern UA gets woff2. Without one we get TTF (older clients). woff2 is fine for resvg-js.
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/124.0",
-    },
-  });
-  if (!res.ok) throw new Error(`fetch ${url}: ${res.status}`);
-  return res.text();
-}
-
 async function fetchBuffer(url) {
-  const res = await fetch(url);
+  const res = await fetch(url, { redirect: "follow" });
   if (!res.ok) throw new Error(`fetch ${url}: ${res.status}`);
   return Buffer.from(await res.arrayBuffer());
 }
 
 async function ensureFonts() {
-  const cached = readdirSync(fontDir).filter((n) => n.endsWith(".woff2"));
-  if (cached.length > 0) {
+  const cached = readdirSync(fontDir).filter((n) => n.endsWith(".ttf"));
+  if (cached.length === FONT_TTF_URLS.length) {
     return cached.map((n) => resolve(fontDir, n));
   }
-  console.log("→ downloading fonts (one-time, cached to scripts/.fontcache/)");
-  const allUrls = new Set();
-  for (const cssUrl of FONT_CSS_URLS) {
-    const css = await fetchText(cssUrl);
-    for (const m of css.matchAll(/url\((https:\/\/[^)]+\.woff2)\)/g)) {
-      allUrls.add(m[1]);
-    }
-  }
-  if (allUrls.size === 0) {
-    throw new Error("no woff2 URLs parsed from Google Fonts CSS");
-  }
+  console.log("→ downloading TTF variable fonts (one-time, cached to scripts/.fontcache/)");
   const paths = [];
-  for (const url of allUrls) {
-    const name = basename(new URL(url).pathname);
+  for (const { name, url } of FONT_TTF_URLS) {
     const dest = resolve(fontDir, name);
     if (!existsSync(dest)) {
       const buf = await fetchBuffer(url);
@@ -89,11 +77,14 @@ async function ensureFonts() {
 
 // ---------- rasterizers ----------------------------------------------
 
-function rasterize(svgPath, { width, fontFiles, background }) {
+function rasterize(svgPath, { width, background }) {
   const svg = readFileSync(svgPath);
   const opts = {
     fitTo: width ? { mode: "width", value: width } : { mode: "original" },
-    font: { fontFiles, loadSystemFonts: false },
+    font: {
+      fontDirs: [fontDir],
+      loadSystemFonts: false,
+    },
     background,
   };
   const resvg = new Resvg(svg, opts);
@@ -103,7 +94,7 @@ function rasterize(svgPath, { width, fontFiles, background }) {
 // ---------- main -----------------------------------------------------
 
 (async () => {
-  const fontFiles = await ensureFonts();
+  await ensureFonts();
 
   const faviconSvg = pub("favicon.svg");
   if (!existsSync(faviconSvg)) throw new Error(`missing ${faviconSvg}`);
@@ -111,7 +102,7 @@ function rasterize(svgPath, { width, fontFiles, background }) {
   // apple-touch-icon: 180×180, OPAQUE cream (iOS strips alpha)
   writeFileSync(
     pub("apple-touch-icon.png"),
-    rasterize(faviconSvg, { width: 180, fontFiles, background: "#fbf9f5" })
+    rasterize(faviconSvg, { width: 180, background: "#fbf9f5" })
   );
   console.log("✓ apple-touch-icon.png");
 
@@ -119,14 +110,14 @@ function rasterize(svgPath, { width, fontFiles, background }) {
   for (const size of [192, 512]) {
     writeFileSync(
       pub(`icon-${size}.png`),
-      rasterize(faviconSvg, { width: size, fontFiles })
+      rasterize(faviconSvg, { width: size })
     );
     console.log(`✓ icon-${size}.png`);
   }
 
   // multi-res ICO: 16/32/48
   const icoBuffers = [16, 32, 48].map((size) =>
-    rasterize(faviconSvg, { width: size, fontFiles })
+    rasterize(faviconSvg, { width: size })
   );
   writeFileSync(pub("favicon.ico"), await pngToIco(icoBuffers));
   console.log("✓ favicon.ico");
@@ -137,7 +128,7 @@ function rasterize(svgPath, { width, fontFiles, background }) {
     if (!existsSync(ogSvg)) throw new Error(`missing ${ogSvg}`);
     writeFileSync(
       pub(`og/og-${lang}.png`),
-      rasterize(ogSvg, { width: 1200, fontFiles })
+      rasterize(ogSvg, { width: 1200 })
     );
     console.log(`✓ og/og-${lang}.png`);
   }
