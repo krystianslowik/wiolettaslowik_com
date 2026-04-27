@@ -1,11 +1,14 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
+import cloudflare from "@astrojs/cloudflare";
+
 // https://astro.build
 export default defineConfig({
   site: "https://wiolettaslowik.com",
   output: "static",
   trailingSlash: "ignore",
+
   i18n: {
     locales: ["en", "de"],
     defaultLocale: "en",
@@ -13,9 +16,11 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
+
   build: {
     format: "directory",
   },
+
   integrations: [
     sitemap({
       i18n: {
@@ -24,4 +29,6 @@ export default defineConfig({
       },
     }),
   ],
+
+  adapter: cloudflare()
 });
