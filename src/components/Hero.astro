@@ -1,0 +1,46 @@
+---
+import type { Copy } from "../i18n";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+---
+
+<header id="top" class="hero">
+  <div class="hero-grid">
+    <div class="hero-text">
+      <h1 class="hero-title">
+        <span class="ht-line">{t.hero.titleA}</span>
+        <span class="ht-line ht-italic">{t.hero.titleB}</span>
+        <span class="ht-line">{t.hero.titleC}</span>
+      </h1>
+      <p class="hero-lede">
+        {t.hero.ledeBefore}<strong>{t.profile.name}</strong>{t.hero.ledeAfter}
+      </p>
+      <div class="hero-actions">
+        <a href="#experience" class="btn btn-primary">
+          {t.hero.ctaPrimary}
+          <span class="arrow">→</span>
+        </a>
+        <a href="#contact" class="btn btn-ghost">{t.hero.ctaSecondary}</a>
+      </div>
+    </div>
+    <figure class="hero-portrait">
+      <img src="/assets/wioletta.png" alt={`Portrait — ${t.profile.name}`} />
+      <figcaption>
+        <span class="cap-rule"></span>
+        <span>{t.hero.caption}</span>
+      </figcaption>
+    </figure>
+  </div>
+  <div class="hero-meta">
+    {t.hero.meta.map(([label, value]) => (
+      <div class="meta">
+        <span class="meta-label">{label}</span>
+        <span class="meta-value">{value}</span>
+      </div>
+    ))}
+  </div>
+</header>

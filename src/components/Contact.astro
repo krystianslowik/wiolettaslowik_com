@@ -1,0 +1,60 @@
+---
+import type { Copy } from "../i18n";
+import SectionHeader from "./SectionHeader.astro";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+
+const info = t.contact.info.map(([label, value]) => [
+  label,
+  value === null ? t.profile.email : value,
+] as [string, string]);
+---
+
+<section id="contact" class="section section-contact">
+  <SectionHeader
+    index={t.contact.index}
+    kicker={t.contact.kicker}
+    title={t.contact.title}
+    lede={t.contact.lede}
+  />
+  <div class="contact-info">
+    {info.map(([label, value], i) => (
+      <div class="ci-block">
+        <span class="ci-label">{label}</span>
+        {i === 0 ? (
+          <a class="ci-value" href={`mailto:${t.profile.email}`}>{value}</a>
+        ) : (
+          <span class="ci-value">{value}</span>
+        )}
+      </div>
+    ))}
+  </div>
+  <div class="contact-cta">
+    <a href={`mailto:${t.profile.email}`} class="btn btn-primary">
+      {t.contact.sendCta}
+      <span class="arrow">→</span>
+    </a>
+    <a
+      href={t.profile.linkedin}
+      class="btn btn-ghost"
+      target="_blank"
+      rel="noopener noreferrer">
+      <svg
+        class="btn-icon"
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        aria-hidden="true"
+        focusable="false">
+        <path
+          fill="currentColor"
+          d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.45c.99 0 1.78-.77 1.78-1.72V1.72C24 .77 23.21 0 22.22 0z" />
+      </svg>
+      LinkedIn
+    </a>
+  </div>
+</section>

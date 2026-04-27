@@ -1,0 +1,74 @@
+---
+import type { Copy } from "../i18n";
+import SectionHeader from "./SectionHeader.astro";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="focus" class="section section-focus">
+  <SectionHeader
+    index={t.focus.index}
+    kicker={t.focus.kicker}
+    title={t.focus.title}
+    lede={t.focus.lede}
+  />
+  <ul class="focus-list" role="list" data-focus-list>
+    {t.focus.areas.map(([num, title, body], i) => (
+      <li
+        class={`focus-row ${i === 0 ? "is-open" : ""}`}
+        data-focus-row
+        tabindex="0"
+        role="button"
+        aria-expanded={i === 0 ? "true" : "false"}>
+        <span class="focus-num">{num}</span>
+        <span class="focus-title">{title}</span>
+        <span class="focus-arrow" aria-hidden="true"></span>
+        <div class="focus-body">
+          <p>{body}</p>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<script>
+  const list = document.querySelector<HTMLElement>("[data-focus-list]");
+  if (list) {
+    const rows = Array.from(list.querySelectorAll<HTMLLIElement>("[data-focus-row]"));
+    const hasHover = window.matchMedia("(hover: hover)").matches;
+
+    const syncAria = () => {
+      rows.forEach((r) =>
+        r.setAttribute("aria-expanded", r.classList.contains("is-open") ? "true" : "false")
+      );
+    };
+    const openRow = (target: HTMLLIElement) => {
+      rows.forEach((r) => r.classList.toggle("is-open", r === target));
+      syncAria();
+    };
+    const toggleRow = (target: HTMLLIElement) => {
+      const isOpen = target.classList.contains("is-open");
+      rows.forEach((r) => r.classList.remove("is-open"));
+      if (!isOpen) target.classList.add("is-open");
+      syncAria();
+    };
+
+    rows.forEach((row) => {
+      row.addEventListener("click", () => toggleRow(row));
+      row.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggleRow(row);
+        }
+      });
+      if (hasHover) {
+        row.addEventListener("mouseenter", () => openRow(row));
+        row.addEventListener("focus", () => openRow(row));
+      }
+    });
+  }
+</script>

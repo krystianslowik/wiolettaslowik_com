@@ -1,0 +1,128 @@
+---
+import type { Copy } from "../i18n";
+import LangSwitch from "./LangSwitch.astro";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+
+const items = [
+  { id: "about", label: t.nav.about, num: "01" },
+  { id: "focus", label: t.nav.focus, num: "02" },
+  { id: "experience", label: t.nav.experience, num: "03" },
+  { id: "systems", label: t.nav.systems, num: "04" },
+  { id: "contact", label: t.nav.contact, num: "05" },
+];
+
+const menuLabel = t.locale === "de" ? "Menü" : "Menu";
+const closeLabel = t.locale === "de" ? "Schließen" : "Close";
+---
+
+<nav class="nav">
+  <a href="#top" class="nav-mark" data-nav-link-self>
+    <span class="mark-glyph">W</span>
+    <span class="mark-text">{t.profile.name}</span>
+  </a>
+
+  <ul class="nav-links" aria-label={menuLabel}>
+    {items.map((i) => (
+      <li>
+        <a href={`#${i.id}`} data-nav-link={i.id}>{i.label}</a>
+      </li>
+    ))}
+  </ul>
+
+  <div class="nav-right">
+    <LangSwitch t={t} />
+    <button
+      type="button"
+      class="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-sheet"
+      aria-label={menuLabel}
+      data-nav-toggle>
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+    </button>
+  </div>
+</nav>
+
+<div id="nav-sheet" class="nav-sheet" data-open="false" data-nav-sheet aria-hidden="true">
+  <div class="nav-sheet-backdrop" data-nav-backdrop></div>
+  <div class="nav-sheet-panel">
+    <ul class="nav-sheet-list" aria-label={menuLabel}>
+      {items.map((i) => (
+        <li>
+          <a href={`#${i.id}`} data-num={i.num} data-nav-sheet-link>{i.label}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <span class="sr-only" aria-live="polite" data-nav-status>{closeLabel}</span>
+</div>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+</style>
+
+<script>
+  // Scroll-spy: highlight the desktop nav link for the section in view.
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]")
+  );
+  const ids = ["about", "focus", "experience", "systems", "contact"];
+  const setActive = (id: string) => {
+    links.forEach((a) => {
+      a.classList.toggle("is-active", a.dataset.navLink === id);
+    });
+  };
+  const observer = new IntersectionObserver(
+    (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+    { rootMargin: "-40% 0px -55% 0px" }
+  );
+  ids.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // Mobile drawer.
+  const toggle = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");
+  const sheet = document.querySelector<HTMLElement>("[data-nav-sheet]");
+  const backdrop = document.querySelector<HTMLElement>("[data-nav-backdrop]");
+  const sheetLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>("[data-nav-sheet-link]")
+  );
+
+  if (toggle && sheet && backdrop) {
+    const setOpen = (open: boolean) => {
+      sheet.dataset.open = open ? "true" : "false";
+      sheet.setAttribute("aria-hidden", open ? "false" : "true");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      document.body.dataset.drawerOpen = open ? "true" : "false";
+    };
+
+    toggle.addEventListener("click", () => {
+      setOpen(sheet.dataset.open !== "true");
+    });
+
+    backdrop.addEventListener("click", () => setOpen(false));
+    sheetLinks.forEach((a) => a.addEventListener("click", () => setOpen(false)));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && sheet.dataset.open === "true") setOpen(false);
+    });
+
+    // close on resize past the desktop breakpoint to avoid stuck state
+    const mq = window.matchMedia("(min-width: 880px)");
+    mq.addEventListener("change", (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+</script>

@@ -1,0 +1,33 @@
+---
+import type { Copy } from "../i18n";
+import SectionHeader from "./SectionHeader.astro";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="systems" class="section section-systems">
+  <SectionHeader
+    index={t.systems.index}
+    kicker={t.systems.kicker}
+    title={t.systems.title}
+    lede={t.systems.lede}
+  />
+  <div class="sys-wrap">
+    <ul class="sys-grid">
+      {t.systems.list.map((s, i) => (
+        <li class="sys-item">
+          <span class="sys-num">{String(i + 1).padStart(2, "0")}</span>
+          <span class="sys-name">{s}</span>
+        </li>
+      ))}
+    </ul>
+    <div class="sys-aside">
+      <p>{t.systems.asideA}</p>
+      <p class="sys-note">{t.systems.asideB}</p>
+    </div>
+  </div>
+</section>

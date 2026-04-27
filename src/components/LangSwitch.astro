@@ -1,0 +1,35 @@
+---
+import type { Copy } from "../i18n";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+const isEn = t.locale === "en";
+---
+
+<div class="lang-switch" role="group" aria-label={t.langSwitch.label}>
+  <a
+    href="/"
+    class={isEn ? "is-active" : ""}
+    aria-current={isEn ? "true" : undefined}
+    data-set-lang="en">{t.langSwitch.en}</a>
+  <span class="lang-divider" aria-hidden="true">·</span>
+  <a
+    href="/de/"
+    class={!isEn ? "is-active" : ""}
+    aria-current={!isEn ? "true" : undefined}
+    data-set-lang="de">{t.langSwitch.de}</a>
+</div>
+
+<script>
+  // Persist the user's explicit language pick so the auto-redirect on `/` honors it.
+  document.querySelectorAll<HTMLAnchorElement>("a[data-set-lang]").forEach((a) => {
+    a.addEventListener("click", () => {
+      try {
+        localStorage.setItem("ws_lang", a.dataset.setLang ?? "");
+      } catch {}
+    });
+  });
+</script>

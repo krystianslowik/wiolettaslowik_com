@@ -1,0 +1,115 @@
+---
+import type { Copy } from "../i18n";
+import SectionHeader from "./SectionHeader.astro";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="experience" class="section section-xp">
+  <SectionHeader
+    index={t.experience.index}
+    kicker={t.experience.kicker}
+    title={t.experience.title}
+    lede={t.experience.lede}
+  />
+  <div class="xp-controls">
+    <button
+      type="button"
+      class="xp-expand"
+      data-xp-expand
+      data-label-expand={t.experience.expandAll}
+      data-label-collapse={t.experience.collapseAll}>
+      <span data-xp-expand-label>{t.experience.expandAll}</span>
+      <span class="arrow" data-xp-expand-arrow>↓</span>
+    </button>
+  </div>
+  <div class="xp-list" data-xp-list>
+    {t.experience.jobs.map((job, i) => (
+      <article class={`xp ${i === 0 ? "is-open" : ""}`} data-xp>
+        <button class="xp-row" type="button" aria-expanded={i === 0 ? "true" : "false"}>
+          <span class="xp-dates">
+            <span class="xp-start">{job.start}</span>
+            <span class="xp-end">{job.end}</span>
+          </span>
+          <span class="xp-meta">
+            <span class="xp-role">{job.role}</span>
+            <span class="xp-company">
+              {job.company}
+              {job.parallel && (
+                <span class="xp-parallel"> · {t.experience.parallel}</span>
+              )}
+            </span>
+          </span>
+          <span class="xp-loc">{job.location}</span>
+          <span class="xp-duration">{job.duration}</span>
+          <span class="xp-toggle" aria-hidden="true">{i === 0 ? "–" : "+"}</span>
+        </button>
+        <div class="xp-detail">
+          <div class="xp-detail-inner">
+            <div class="xp-bullets">
+              <span class="xp-detail-label">{t.experience.selectedWork}</span>
+              <ul>
+                {job.bullets.map((b) => <li>{b}</li>)}
+              </ul>
+            </div>
+            <div class="xp-skills">
+              <span class="xp-detail-label">{t.experience.skills}</span>
+              <ul>
+                {job.skills.map((s) => <li>{s}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script>
+  const list = document.querySelector<HTMLElement>("[data-xp-list]");
+  const expandBtn = document.querySelector<HTMLButtonElement>("[data-xp-expand]");
+  if (list && expandBtn) {
+    const items = Array.from(list.querySelectorAll<HTMLElement>("[data-xp]"));
+    const expandLabelEl = expandBtn.querySelector<HTMLElement>("[data-xp-expand-label]");
+    const expandArrowEl = expandBtn.querySelector<HTMLElement>("[data-xp-expand-arrow]");
+    const labelExpand = expandBtn.dataset.labelExpand ?? "Expand all";
+    const labelCollapse = expandBtn.dataset.labelCollapse ?? "Collapse all";
+
+    const setToggleGlyph = (item: HTMLElement, open: boolean) => {
+      const glyph = item.querySelector<HTMLElement>(".xp-toggle");
+      if (glyph) glyph.textContent = open ? "–" : "+";
+      const row = item.querySelector<HTMLButtonElement>(".xp-row");
+      if (row) row.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    const refreshControls = () => {
+      const allOpen = items.every((it) => it.classList.contains("is-open"));
+      if (expandLabelEl) expandLabelEl.textContent = allOpen ? labelCollapse : labelExpand;
+      if (expandArrowEl) expandArrowEl.textContent = allOpen ? "↑" : "↓";
+    };
+
+    items.forEach((item) => {
+      const row = item.querySelector<HTMLButtonElement>(".xp-row");
+      row?.addEventListener("click", () => {
+        item.classList.toggle("is-open");
+        setToggleGlyph(item, item.classList.contains("is-open"));
+        refreshControls();
+      });
+    });
+
+    expandBtn.addEventListener("click", () => {
+      const allOpen = items.every((it) => it.classList.contains("is-open"));
+      items.forEach((item) => {
+        item.classList.toggle("is-open", !allOpen);
+        setToggleGlyph(item, !allOpen);
+      });
+      refreshControls();
+    });
+
+    refreshControls();
+  }
+</script>

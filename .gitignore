@@ -1,0 +1,17 @@
+node_modules
+dist
+.astro
+.DS_Store
+.env
+.env*
+.wrangler
+npm-debug.log*
+
+# local agent/editor config — never commit
+.claude/
+CLAUDE.md
+_mockup/CLAUDE.md
+
+# local working files (mockup screenshots, scratch images)
+screenshots/
+uploads/

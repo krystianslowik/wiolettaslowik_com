@@ -1,0 +1,22 @@
+---
+import type { Copy } from "../i18n";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-mark">
+    <span class="footer-glyph">W. S.</span>
+    <span class="footer-tag">{t.footer.tag}</span>
+  </div>
+  <div class="footer-meta">
+    <span>© {year} {t.profile.name}</span>
+    <span>·</span>
+    <a href="#top">{t.footer.backToTop}</a>
+  </div>
+</footer>

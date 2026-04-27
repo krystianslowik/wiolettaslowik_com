@@ -1,0 +1,21 @@
+---
+import { emify } from "../i18n/format";
+
+interface Props {
+  index: string;
+  kicker: string;
+  title: string;
+  lede?: string;
+}
+
+const { index, kicker, title, lede } = Astro.props;
+---
+
+<div class="sec-head">
+  <div class="sec-head-top">
+    <span class="sec-index">§ {index}</span>
+    <span class="sec-kicker">{kicker}</span>
+  </div>
+  <h2 class="sec-title" set:html={emify(title)}></h2>
+  {lede && <p class="sec-lede">{lede}</p>}
+</div>

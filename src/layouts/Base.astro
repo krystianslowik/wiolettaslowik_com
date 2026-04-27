@@ -1,0 +1,34 @@
+---
+import "../styles/global.css";
+import type { Copy } from "../i18n";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+const fontsHref =
+  "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap";
+---
+
+<!doctype html>
+<html lang={t.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+
+    <link rel="alternate" hreflang="en" href="https://wiolettaslowik.com/" />
+    <link rel="alternate" hreflang="de" href="https://wiolettaslowik.com/de/" />
+    <link rel="alternate" hreflang="x-default" href="https://wiolettaslowik.com/" />
+    <link rel="canonical" href={t.locale === "en" ? "https://wiolettaslowik.com/" : "https://wiolettaslowik.com/de/"} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href={fontsHref} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

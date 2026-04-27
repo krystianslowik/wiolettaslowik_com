@@ -1,0 +1,27 @@
+---
+import type { Copy } from "../i18n";
+import SectionHeader from "./SectionHeader.astro";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="about" class="section section-about">
+  <SectionHeader index={t.about.index} kicker={t.about.kicker} title={t.about.title} />
+  <div class="about-grid">
+    <div class="about-body">
+      {t.about.body.map((p) => <p>{p}</p>)}
+    </div>
+    <aside class="about-side">
+      {t.about.principles.map(([k, v]) => (
+        <div class="principle">
+          <span class="principle-key">{k}</span>
+          <span class="principle-val">{v}</span>
+        </div>
+      ))}
+    </aside>
+  </div>
+</section>
