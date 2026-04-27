@@ -15,3 +15,6 @@ _mockup/CLAUDE.md
 # local working files (mockup screenshots, scratch images)
 screenshots/
 uploads/
+
+# fonts cached by scripts/render-static-assets.mjs
+scripts/.fontcache/
