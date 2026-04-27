@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build
 export default defineConfig({
@@ -15,4 +16,12 @@ export default defineConfig({
   build: {
     format: "directory",
   },
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: "en",
+        locales: { en: "en-US", de: "de-DE" },
+      },
+    }),
+  ],
 });
