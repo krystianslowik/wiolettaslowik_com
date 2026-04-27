@@ -18,6 +18,12 @@ export interface Copy {
   meta: {
     title: string;
     description: string;
+    /** OG/Twitter title; defaults to `title` when absent. */
+    ogTitle?: string;
+    /** OG/Twitter description; defaults to `description` when absent. */
+    ogDescription?: string;
+    /** Alt text for the OG image. */
+    ogImageAlt: string;
   };
   nav: {
     about: string;

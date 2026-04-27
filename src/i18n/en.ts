@@ -7,6 +7,11 @@ export const en: Copy = {
     title: "Wioletta Słowik — HR Business Partner · LL.B.",
     description:
       "Wioletta Słowik. HR Business Partner with a legal background. Employment law, compliance, contract management, works council, Personio.",
+    ogTitle: "Wioletta Słowik — HR Business Partner · LL.B.",
+    ogDescription:
+      "HR Generalist with an LL.B. in Business Law. Contracts, works council, Personio + DATEV LODAS, employee relations.",
+    ogImageAlt:
+      "Wioletta Słowik — HR Business Partner · LL.B. Business Law",
   },
   nav: {
     about: "About",
