@@ -57,7 +57,7 @@ Per-locale strings live in `src/i18n/{en,de}.ts`. The existing `meta: { title, d
 <link rel="manifest" href="/site.webmanifest" />
 ```
 
-**Production:** PNG/ICO files are rendered once during implementation from the SVG by a small Node script `scripts/render-static-assets.mjs`. The script depends on `sharp` (SVG → PNG at any size) and `png-to-ico` (PNG bundle → multi-resolution ICO). Both are installed with `npm install --no-save sharp png-to-ico` so they never enter `package.json`. The script is committed for future regeneration but is **not** wired into `npm run build`. Source SVG is committed; raster outputs are committed.
+**Production:** PNG/ICO files are rendered once during implementation from the SVG by a small Node script `scripts/render-static-assets.mjs`. The script depends on `@resvg/resvg-js` (font-aware SVG → PNG, accepts explicit font paths) and `png-to-ico` (PNG bundle → multi-resolution ICO). Both are installed with `npm install --no-save @resvg/resvg-js png-to-ico` so they never enter `package.json`. The script downloads Fraunces woff2 files from Google Fonts on first run and caches them to `scripts/.fontcache/` (gitignored). The script is committed for future regeneration but is **not** wired into `npm run build`. Source SVG is committed; raster outputs are committed.
 
 ## 3. OG / Twitter cards
 
@@ -66,7 +66,7 @@ Per-locale strings live in `src/i18n/{en,de}.ts`. The existing `meta: { title, d
 - `public/og/og-en.svg` and `public/og/og-de.svg` — source SVGs, committed for future edits
 - `public/og/og-en.png` and `public/og/og-de.png` — rendered 1200×630 PNGs, committed
 
-**Rendering:** same `scripts/render-static-assets.mjs` script as the favicon kit (uses `sharp` for SVG → PNG). Run once during implementation, results committed. To regenerate later: `npm install --no-save sharp png-to-ico && node scripts/render-static-assets.mjs`.
+**Rendering:** same `scripts/render-static-assets.mjs` script as the favicon kit (uses `@resvg/resvg-js` with cached Fraunces woff2 fonts). Run once during implementation, results committed. To regenerate later: `npm install --no-save @resvg/resvg-js png-to-ico && node scripts/render-static-assets.mjs`.
 
 **Card design** (mirrors site visual vocabulary):
 
