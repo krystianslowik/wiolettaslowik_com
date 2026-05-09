@@ -11,9 +11,11 @@ const { t } = Astro.props;
 const items = [
   { id: "about", label: t.nav.about, num: "01" },
   { id: "focus", label: t.nav.focus, num: "02" },
-  { id: "experience", label: t.nav.experience, num: "03" },
-  { id: "systems", label: t.nav.systems, num: "04" },
-  { id: "contact", label: t.nav.contact, num: "05" },
+  { id: "packages", label: t.nav.packages, num: "03" },
+  { id: "process", label: t.nav.process, num: "04" },
+  { id: "systems", label: t.nav.systems, num: "05" },
+  { id: "experience", label: t.nav.experience, num: "06" },
+  { id: "contact", label: t.nav.contact, num: "07" },
 ];
 
 const menuLabel = t.locale === "de" ? "Menü" : "Menu";
@@ -77,7 +79,7 @@ const closeLabel = t.locale === "de" ? "Schließen" : "Close";
   const links = Array.from(
     document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]")
   );
-  const ids = ["about", "focus", "experience", "systems", "contact"];
+  const ids = ["about", "focus", "packages", "process", "systems", "experience", "contact"];
   const setActive = (id: string) => {
     links.forEach((a) => {
       a.classList.toggle("is-active", a.dataset.navLink === id);

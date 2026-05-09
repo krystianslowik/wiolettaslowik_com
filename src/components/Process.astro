@@ -1,0 +1,34 @@
+---
+import type { Copy } from "../i18n";
+import SectionHeader from "./SectionHeader.astro";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="process" class="section section-process">
+  <SectionHeader
+    index={t.process.index}
+    kicker={t.process.kicker}
+    title={t.process.title}
+    lede={t.process.lede}
+  />
+  <ol class="proc-steps">
+    {t.process.steps.map((s) => (
+      <li class="proc-step">
+        <span class="proc-num">{s.num}</span>
+        <h3 class="proc-title">{s.title}</h3>
+        <p class="proc-body">{s.body}</p>
+      </li>
+    ))}
+  </ol>
+  <div class="proc-cta">
+    <a href={`mailto:${t.profile.email}`} class="btn btn-primary">
+      {t.process.cta}
+      <span class="arrow">→</span>
+    </a>
+  </div>
+</section>

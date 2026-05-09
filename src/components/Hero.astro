@@ -16,11 +16,11 @@ const { t } = Astro.props;
         <span class="ht-line ht-italic">{t.hero.titleB}</span>
         <span class="ht-line">{t.hero.titleC}</span>
       </h1>
-      <p class="hero-lede">
-        {t.hero.ledeBefore}<strong>{t.profile.name}</strong>{t.hero.ledeAfter}
-      </p>
+      <div class="hero-lede">
+        {t.hero.lede.map((p) => <p>{p}</p>)}
+      </div>
       <div class="hero-actions">
-        <a href="#experience" class="btn btn-primary">
+        <a href="#packages" class="btn btn-primary">
           {t.hero.ctaPrimary}
           <span class="arrow">→</span>
         </a>
