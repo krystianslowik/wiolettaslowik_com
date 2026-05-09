@@ -854,6 +854,28 @@ main {
   .xp-expand { font-size: 0.78rem; padding: 0.4rem 0.8rem; }
 }
 
+/* ========== subpage prelink ========== */
+
+.page-prelink {
+  margin: clamp(1.4rem, 4vw, 2.5rem) 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  color: var(--c-muted);
+}
+.page-prelink a {
+  display: inline-block;
+  padding: 0.3rem 0;
+  transition: color 160ms var(--ease-out);
+}
+.page-prelink a:hover { color: var(--c-accent); }
+
+/* On a subpage, the very next .section keeps its top border but reduces top
+   padding so the back-link doesn't look stranded. */
+.page-prelink + .section {
+  padding-top: clamp(1.5rem, 4vw, 2.5rem);
+}
+
 /* ========== packages ========== */
 
 .pkg-controls {

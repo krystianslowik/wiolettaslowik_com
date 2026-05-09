@@ -40,7 +40,7 @@ export const en: Copy = {
     ],
     ctaPrimary: "See packages",
     ctaSecondary: "Start a conversation",
-    caption: "Münster · Rheine · NRW",
+    caption: "Münster · NRW · Remote",
     meta: [
       ["Based", "NRW · Remote"],
       ["Org size", "1–100 employees"],
@@ -104,11 +104,22 @@ export const en: Copy = {
   },
   packages: {
     kicker: "Packages",
-    index: "03",
+    index: "01",
     title: "HR packages you understand {em}before{/em} we start.",
     lede: "Scope, outcome, and price — all transparent before the first call.",
     expandAll: "Expand all",
     collapseAll: "Collapse all",
+    pageMeta: {
+      title: "HR Packages — Wioletta Słowik",
+      description:
+        "Structured HR packages for startups and small companies — audit, setup, lifecycle, documents, sparring. Scope, outcome, and price transparent before the first call.",
+      ogTitle: "HR Packages — Wioletta Słowik",
+      ogDescription:
+        "Five structured HR packages for startups and small companies — from hire to exit.",
+      ogImageAlt:
+        "Wioletta Słowik — HR packages for startups and small companies",
+    },
+    backToHome: "← Back to home",
     labels: {
       content: "Includes",
       result: "Outcome",
@@ -282,7 +293,7 @@ export const en: Copy = {
   },
   process: {
     kicker: "Process",
-    index: "04",
+    index: "03",
     title: "How we {em}work together.{/em}",
     lede: "A clear process — structured, transparent, and efficient.",
     steps: [
@@ -306,7 +317,7 @@ export const en: Copy = {
   },
   systems: {
     kicker: "Systems & stack",
-    index: "05",
+    index: "04",
     title: "The tools {em}on my desk.{/em}",
     lede:
       "A pragmatic HR-tech mix of established payroll systems and modern HRIS solutions — backed by structured documentation and clean data processes.",
@@ -323,7 +334,7 @@ export const en: Copy = {
   },
   experience: {
     kicker: "Experience",
-    index: "06",
+    index: "05",
     title: "Roughly a {em}decade{/em} in the trenches.",
     lede: "Five roles across staffing, hospitality, healthcare, and infrastructure. Two of them still active.",
     expandAll: "Expand all",
@@ -424,7 +435,7 @@ export const en: Copy = {
   },
   contact: {
     kicker: "Contact",
-    index: "07",
+    index: "06",
     title: "Let's talk about {em}your HR function.{/em}",
     lede: "Open to packages, interim mandates, and ongoing HR sparring engagements.",
     info: [

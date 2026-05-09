@@ -40,7 +40,7 @@ export const de: Copy = {
     ],
     ctaPrimary: "Pakete ansehen",
     ctaSecondary: "Gespräch beginnen",
-    caption: "Münster · Rheine · NRW",
+    caption: "Münster · NRW · Remote",
     meta: [
       ["Standort", "NRW · Remote"],
       ["Unternehmensgröße", "1–100 Mitarbeitende"],
@@ -104,11 +104,22 @@ export const de: Copy = {
   },
   packages: {
     kicker: "Pakete",
-    index: "03",
+    index: "01",
     title: "HR-Pakete, die Sie {em}vorher{/em} verstehen.",
     lede: "Inhalt, Ergebnis und Investition — alles transparent vor dem ersten Termin.",
     expandAll: "Alle aufklappen",
     collapseAll: "Alle einklappen",
+    pageMeta: {
+      title: "HR-Pakete — Wioletta Słowik",
+      description:
+        "Strukturierte HR-Pakete für Startups und kleine Unternehmen — Audit, Setup, Lifecycle, Dokumente, Sparring. Inhalt, Ergebnis und Investition transparent vor dem ersten Termin.",
+      ogTitle: "HR-Pakete — Wioletta Słowik",
+      ogDescription:
+        "Fünf strukturierte HR-Pakete für Startups und kleine Unternehmen — von Hire bis Exit.",
+      ogImageAlt:
+        "Wioletta Słowik — HR-Pakete für Startups und kleine Unternehmen",
+    },
+    backToHome: "← Zurück zur Startseite",
     labels: {
       content: "Inhalt",
       result: "Ergebnis",
@@ -282,7 +293,7 @@ export const de: Copy = {
   },
   process: {
     kicker: "Ablauf",
-    index: "04",
+    index: "03",
     title: "So läuft die {em}Zusammenarbeit.{/em}",
     lede: "Ein klarer Prozess — strukturiert, transparent und effizient.",
     steps: [
@@ -306,7 +317,7 @@ export const de: Copy = {
   },
   systems: {
     kicker: "Systeme & Stack",
-    index: "05",
+    index: "04",
     title: "Die Werkzeuge {em}auf meinem Schreibtisch.{/em}",
     lede:
       "Ein pragmatischer HR-Tech-Mix aus etablierten Payroll-Systemen und modernen HRIS-Lösungen — ergänzt durch strukturierte Dokumentation und saubere Datenprozesse.",
@@ -323,7 +334,7 @@ export const de: Copy = {
   },
   experience: {
     kicker: "Erfahrung",
-    index: "06",
+    index: "05",
     title: "Rund ein {em}Jahrzehnt{/em} aus der Praxis.",
     lede:
       "Fünf Stationen in Personaldienstleistung, Gastronomie, Gesundheitswesen und Infrastruktur. Zwei davon laufen noch.",
@@ -425,7 +436,7 @@ export const de: Copy = {
   },
   contact: {
     kicker: "Kontakt",
-    index: "07",
+    index: "06",
     title: "Sprechen wir über {em}Ihre HR-Funktion.{/em}",
     lede: "Offen für Pakete, Interim-Mandate und laufende HR-Sparring-Modelle.",
     info: [

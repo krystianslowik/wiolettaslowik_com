@@ -1,14 +1,15 @@
 ---
 import "../styles/global.css";
 import type { Copy } from "../i18n";
-import { getSeo } from "../seo";
+import { getSeo, type PageKind } from "../seo";
 
 interface Props {
   t: Copy;
+  kind?: PageKind;
 }
 
-const { t } = Astro.props;
-const seo = getSeo(t);
+const { t, kind = "home" } = Astro.props;
+const seo = getSeo(t, kind);
 
 const fontsHref =
   "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap";

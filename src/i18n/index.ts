@@ -14,4 +14,13 @@ export function homeUrl(locale: Locale): string {
   return locale === "en" ? "/" : `/${locale}/`;
 }
 
+const PACKAGES_PATH: Record<Locale, string> = {
+  en: "/packages/",
+  de: "/de/pakete/",
+};
+
+export function packagesUrl(locale: Locale): string {
+  return PACKAGES_PATH[locale];
+}
+
 export type { Copy, Locale };

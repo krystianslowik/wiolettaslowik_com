@@ -1,5 +1,6 @@
 ---
 import type { Copy } from "../i18n";
+import { homeUrl, packagesUrl } from "../i18n";
 import LangSwitch from "./LangSwitch.astro";
 
 interface Props {
@@ -8,22 +9,37 @@ interface Props {
 
 const { t } = Astro.props;
 
-const items = [
-  { id: "about", label: t.nav.about, num: "01" },
-  { id: "focus", label: t.nav.focus, num: "02" },
-  { id: "packages", label: t.nav.packages, num: "03" },
-  { id: "process", label: t.nav.process, num: "04" },
-  { id: "systems", label: t.nav.systems, num: "05" },
-  { id: "experience", label: t.nav.experience, num: "06" },
-  { id: "contact", label: t.nav.contact, num: "07" },
+const rawPath = Astro.url.pathname || "/";
+const path = rawPath.endsWith("/") ? rawPath : `${rawPath}/`;
+const homeP = homeUrl(t.locale);
+const pkgP = packagesUrl(t.locale);
+
+const isHome = path === homeP;
+const isPackagesPage = path === pkgP;
+
+interface AnchorItem { kind: "anchor"; id: string; label: string; num: string; }
+interface PageItem { kind: "page"; id: string; label: string; num: string; href: string; active: boolean; }
+type NavItem = AnchorItem | PageItem;
+
+const items: NavItem[] = [
+  { kind: "anchor", id: "about", label: t.nav.about, num: "01" },
+  { kind: "anchor", id: "focus", label: t.nav.focus, num: "02" },
+  { kind: "page", id: "packages", label: t.nav.packages, num: "↗", href: pkgP, active: isPackagesPage },
+  { kind: "anchor", id: "process", label: t.nav.process, num: "03" },
+  { kind: "anchor", id: "systems", label: t.nav.systems, num: "04" },
+  { kind: "anchor", id: "experience", label: t.nav.experience, num: "05" },
+  { kind: "anchor", id: "contact", label: t.nav.contact, num: "06" },
 ];
+
+const anchorHref = (id: string) => (isHome ? `#${id}` : `${homeP}#${id}`);
+const markHref = isHome ? "#top" : homeP;
 
 const menuLabel = t.locale === "de" ? "Menü" : "Menu";
 const closeLabel = t.locale === "de" ? "Schließen" : "Close";
 ---
 
 <nav class="nav">
-  <a href="#top" class="nav-mark" data-nav-link-self>
+  <a href={markHref} class="nav-mark" data-nav-link-self>
     <span class="mark-glyph">W</span>
     <span class="mark-text">{t.profile.name}</span>
   </a>
@@ -31,7 +47,11 @@ const closeLabel = t.locale === "de" ? "Schließen" : "Close";
   <ul class="nav-links" aria-label={menuLabel}>
     {items.map((i) => (
       <li>
-        <a href={`#${i.id}`} data-nav-link={i.id}>{i.label}</a>
+        {i.kind === "anchor" ? (
+          <a href={anchorHref(i.id)} data-nav-link={i.id}>{i.label}</a>
+        ) : (
+          <a href={i.href} class={i.active ? "is-active" : ""} data-nav-page={i.id}>{i.label}</a>
+        )}
       </li>
     ))}
   </ul>
@@ -56,7 +76,11 @@ const closeLabel = t.locale === "de" ? "Schließen" : "Close";
     <ul class="nav-sheet-list" aria-label={menuLabel}>
       {items.map((i) => (
         <li>
-          <a href={`#${i.id}`} data-num={i.num} data-nav-sheet-link>{i.label}</a>
+          {i.kind === "anchor" ? (
+            <a href={anchorHref(i.id)} data-num={i.num} data-nav-sheet-link>{i.label}</a>
+          ) : (
+            <a href={i.href} class={i.active ? "is-active" : ""} data-num={i.num} data-nav-sheet-link>{i.label}</a>
+          )}
         </li>
       ))}
     </ul>
@@ -76,23 +100,26 @@ const closeLabel = t.locale === "de" ? "Schließen" : "Close";
 
 <script>
   // Scroll-spy: highlight the desktop nav link for the section in view.
+  // Only activates when the section element exists on the current page.
   const links = Array.from(
     document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]")
   );
-  const ids = ["about", "focus", "packages", "process", "systems", "experience", "contact"];
+  const ids = ["about", "focus", "process", "systems", "experience", "contact"];
   const setActive = (id: string) => {
     links.forEach((a) => {
       a.classList.toggle("is-active", a.dataset.navLink === id);
     });
   };
-  const observer = new IntersectionObserver(
-    (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
-    { rootMargin: "-40% 0px -55% 0px" }
-  );
-  ids.forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) observer.observe(el);
-  });
+  const targets = ids
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null);
+  if (targets.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-40% 0px -55% 0px" }
+    );
+    targets.forEach((el) => observer.observe(el));
+  }
 
   // Mobile drawer.
   const toggle = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");

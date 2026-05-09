@@ -108,6 +108,16 @@ export interface Copy {
     lede: string;
     expandAll: string;
     collapseAll: string;
+    /** Per-locale meta for the standalone /packages/ (or /de/pakete/) page. */
+    pageMeta: {
+      title: string;
+      description: string;
+      ogTitle?: string;
+      ogDescription?: string;
+      ogImageAlt: string;
+    };
+    /** "Back to home" link label, shown in the subpage header. */
+    backToHome: string;
     labels: {
       content: string;
       result: string;

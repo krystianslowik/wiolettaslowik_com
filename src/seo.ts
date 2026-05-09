@@ -2,6 +2,8 @@ import type { Copy, Locale } from "./i18n";
 
 export const SITE_URL = "https://wiolettaslowik.com";
 
+export type PageKind = "home" | "packages";
+
 export interface SeoTags {
   htmlLang: string;
   title: string;
@@ -39,9 +41,9 @@ const LOCALE_TO_OG: Record<Locale, string> = {
   de: "de_DE",
 };
 
-const PATH_FOR_LOCALE: Record<Locale, string> = {
-  en: "/",
-  de: "/de/",
+const PATHS: Record<PageKind, Record<Locale, string>> = {
+  home: { en: "/", de: "/de/" },
+  packages: { en: "/packages/", de: "/de/pakete/" },
 };
 
 export function absUrl(path: string): string {
@@ -50,25 +52,27 @@ export function absUrl(path: string): string {
   return `${SITE_URL}${trimmed}`;
 }
 
-export function getSeo(t: Copy): SeoTags {
+export function getSeo(t: Copy, kind: PageKind = "home"): SeoTags {
   const locale = t.locale;
   const otherLocale: Locale = locale === "en" ? "de" : "en";
-  const canonical = absUrl(PATH_FOR_LOCALE[locale]);
+  const paths = PATHS[kind];
+  const canonical = absUrl(paths[locale]);
   const ogImage = absUrl(`/og/og-${locale}.png`);
   const portrait = absUrl("/assets/wioletta.png");
 
-  const ogTitle = t.meta.ogTitle ?? t.meta.title;
-  const ogDescription = t.meta.ogDescription ?? t.meta.description;
+  const meta = kind === "packages" ? t.packages.pageMeta : t.meta;
+  const ogTitle = meta.ogTitle ?? meta.title;
+  const ogDescription = meta.ogDescription ?? meta.description;
 
   return {
     htmlLang: t.htmlLang,
-    title: t.meta.title,
-    description: t.meta.description,
+    title: meta.title,
+    description: meta.description,
     canonical,
     alternates: [
-      { hreflang: "en", href: absUrl(PATH_FOR_LOCALE.en) },
-      { hreflang: "de", href: absUrl(PATH_FOR_LOCALE.de) },
-      { hreflang: "x-default", href: absUrl(PATH_FOR_LOCALE.en) },
+      { hreflang: "en", href: absUrl(paths.en) },
+      { hreflang: "de", href: absUrl(paths.de) },
+      { hreflang: "x-default", href: absUrl(paths.en) },
     ],
     og: {
       type: "website",
@@ -81,14 +85,14 @@ export function getSeo(t: Copy): SeoTags {
       image: ogImage,
       imageWidth: 1200,
       imageHeight: 630,
-      imageAlt: t.meta.ogImageAlt,
+      imageAlt: meta.ogImageAlt,
     },
     twitter: {
       card: "summary_large_image",
       title: ogTitle,
       description: ogDescription,
       image: ogImage,
-      imageAlt: t.meta.ogImageAlt,
+      imageAlt: meta.ogImageAlt,
     },
     jsonLd: {
       person: {

@@ -1,11 +1,13 @@
 ---
 import type { Copy } from "../i18n";
+import { packagesUrl } from "../i18n";
 
 interface Props {
   t: Copy;
 }
 
 const { t } = Astro.props;
+const pkgHref = packagesUrl(t.locale);
 ---
 
 <header id="top" class="hero">
@@ -20,7 +22,7 @@ const { t } = Astro.props;
         {t.hero.lede.map((p) => <p>{p}</p>)}
       </div>
       <div class="hero-actions">
-        <a href="#packages" class="btn btn-primary">
+        <a href={pkgHref} class="btn btn-primary">
           {t.hero.ctaPrimary}
           <span class="arrow">→</span>
         </a>

@@ -4,14 +4,17 @@ import SectionHeader from "./SectionHeader.astro";
 
 interface Props {
   t: Copy;
+  /** Override the section index (e.g. when Process appears on a subpage). */
+  index?: string;
 }
 
-const { t } = Astro.props;
+const { t, index } = Astro.props;
+const idx = index ?? t.process.index;
 ---
 
 <section id="process" class="section section-process">
   <SectionHeader
-    index={t.process.index}
+    index={idx}
     kicker={t.process.kicker}
     title={t.process.title}
     lede={t.process.lede}
