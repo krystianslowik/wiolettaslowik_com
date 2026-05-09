@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import partytown from "@astrojs/partytown";
 
 import cloudflare from "@astrojs/cloudflare";
 
@@ -27,6 +28,10 @@ export default defineConfig({
         defaultLocale: "en",
         locales: { en: "en-US", de: "de-DE" },
       },
+    }),
+    partytown({
+      // Forward gtag's dataLayer.push calls from main thread to the worker.
+      config: { forward: ["dataLayer.push"] },
     }),
   ],
 

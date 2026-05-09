@@ -56,6 +56,15 @@ const fontsHref =
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href={fontsHref} />
+
+    <!-- Google tag (gtag.js) — runs off the main thread via @astrojs/partytown -->
+    <script type="text/partytown" async src="https://www.googletagmanager.com/gtag/js?id=G-57466NVY89"></script>
+    <script type="text/partytown">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-57466NVY89');
+    </script>
   </head>
   <body>
     <slot />
