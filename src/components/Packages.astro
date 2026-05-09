@@ -1,0 +1,139 @@
+---
+import type { Copy } from "../i18n";
+import SectionHeader from "./SectionHeader.astro";
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="packages" class="section section-pkg">
+  <SectionHeader
+    index={t.packages.index}
+    kicker={t.packages.kicker}
+    title={t.packages.title}
+    lede={t.packages.lede}
+  />
+  <div class="pkg-controls">
+    <button
+      type="button"
+      class="pkg-expand"
+      data-pkg-expand
+      data-label-expand={t.packages.expandAll}
+      data-label-collapse={t.packages.collapseAll}>
+      <span data-pkg-expand-label>{t.packages.expandAll}</span>
+      <span class="arrow" data-pkg-expand-arrow>↓</span>
+    </button>
+  </div>
+  <div class="pkg-list" data-pkg-list>
+    {t.packages.items.map((p, i) => (
+      <article id={`pkg-${p.id}`} class={`pkg ${i === 0 ? "is-open" : ""}`} data-pkg>
+        <button class="pkg-row" type="button" aria-expanded={i === 0 ? "true" : "false"}>
+          <span class="pkg-name">{p.name}</span>
+          <span class="pkg-tagline">{p.tagline}</span>
+          <span class="pkg-price">{p.priceShort}</span>
+          <span class="pkg-toggle" aria-hidden="true">{i === 0 ? "–" : "+"}</span>
+        </button>
+        <div class="pkg-detail">
+          <div class="pkg-detail-inner">
+            <div class="pkg-main">
+              <p class="pkg-intro">{p.intro}</p>
+              <div class="pkg-content">
+                <span class="pkg-detail-label">{t.packages.labels.content}</span>
+                {p.content.map((g) => (
+                  <div class={`pkg-group ${g.label ? "has-label" : ""}`}>
+                    {g.label && <span class="pkg-group-label">{g.label}</span>}
+                    <ul>
+                      {g.items.map((it) => <li>{it}</li>)}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+              {p.models && (
+                <div class="pkg-models">
+                  <span class="pkg-detail-label">{t.packages.labels.models}</span>
+                  <ul class="pkg-model-list">
+                    {p.models.map((m) => (
+                      <li class="pkg-model">
+                        <span class="pkg-model-name">{m.name}</span>
+                        <span class="pkg-model-hours">{m.hours}</span>
+                        <span class="pkg-model-desc">{m.desc}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <aside class="pkg-side">
+              <div class="pkg-side-block">
+                <span class="pkg-detail-label">{t.packages.labels.result}</span>
+                <p>{p.result}</p>
+              </div>
+              <div class="pkg-side-block">
+                <span class="pkg-detail-label">{t.packages.labels.audience}</span>
+                <p>{p.audience}</p>
+              </div>
+              {p.duration && (
+                <div class="pkg-side-block pkg-side-meta">
+                  <span class="pkg-detail-label">{t.packages.labels.duration}</span>
+                  <p class="pkg-meta-val">{p.duration}</p>
+                </div>
+              )}
+              <div class="pkg-side-block pkg-side-meta">
+                <span class="pkg-detail-label">{t.packages.labels.investment}</span>
+                <p class="pkg-meta-val pkg-investment">{p.investment}</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script>
+  const list = document.querySelector<HTMLElement>("[data-pkg-list]");
+  const expandBtn = document.querySelector<HTMLButtonElement>("[data-pkg-expand]");
+  if (list && expandBtn) {
+    const items = Array.from(list.querySelectorAll<HTMLElement>("[data-pkg]"));
+    const expandLabelEl = expandBtn.querySelector<HTMLElement>("[data-pkg-expand-label]");
+    const expandArrowEl = expandBtn.querySelector<HTMLElement>("[data-pkg-expand-arrow]");
+    const labelExpand = expandBtn.dataset.labelExpand ?? "Expand all";
+    const labelCollapse = expandBtn.dataset.labelCollapse ?? "Collapse all";
+
+    const setToggleGlyph = (item: HTMLElement, open: boolean) => {
+      const glyph = item.querySelector<HTMLElement>(".pkg-toggle");
+      if (glyph) glyph.textContent = open ? "–" : "+";
+      const row = item.querySelector<HTMLButtonElement>(".pkg-row");
+      if (row) row.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    const refreshControls = () => {
+      const allOpen = items.every((it) => it.classList.contains("is-open"));
+      if (expandLabelEl) expandLabelEl.textContent = allOpen ? labelCollapse : labelExpand;
+      if (expandArrowEl) expandArrowEl.textContent = allOpen ? "↑" : "↓";
+    };
+
+    items.forEach((item) => {
+      const row = item.querySelector<HTMLButtonElement>(".pkg-row");
+      row?.addEventListener("click", () => {
+        item.classList.toggle("is-open");
+        setToggleGlyph(item, item.classList.contains("is-open"));
+        refreshControls();
+      });
+    });
+
+    expandBtn.addEventListener("click", () => {
+      const allOpen = items.every((it) => it.classList.contains("is-open"));
+      items.forEach((item) => {
+        item.classList.toggle("is-open", !allOpen);
+        setToggleGlyph(item, !allOpen);
+      });
+      refreshControls();
+    });
+
+    refreshControls();
+  }
+</script>

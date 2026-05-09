@@ -12,6 +12,40 @@ export interface Job {
   skills: string[];
 }
 
+export interface PackageGroup {
+  /** Optional group label (e.g. "HIRE"). Absent for ungrouped lists. */
+  label?: string;
+  items: string[];
+}
+
+export interface PackageModel {
+  name: string;
+  hours: string;
+  desc: string;
+}
+
+export interface Package {
+  id: string;
+  name: string;
+  tagline: string;
+  /** Compact price shown in the collapsed accordion row (e.g. "690–1.490 €"). */
+  priceShort: string;
+  intro: string;
+  content: PackageGroup[];
+  result: string;
+  audience: string;
+  duration?: string;
+  models?: PackageModel[];
+  /** Full investment line shown in the expanded panel. */
+  investment: string;
+}
+
+export interface ProcessStep {
+  num: string;
+  title: string;
+  body: string;
+}
+
 export interface Copy {
   locale: Locale;
   htmlLang: string;
@@ -28,8 +62,10 @@ export interface Copy {
   nav: {
     about: string;
     focus: string;
-    experience: string;
+    packages: string;
+    process: string;
     systems: string;
+    experience: string;
     contact: string;
     cta: string;
   };
@@ -43,9 +79,8 @@ export interface Copy {
     titleA: string;
     titleB: string;
     titleC: string;
-    /** Lede with `<strong>` placeholder around the name. The `{name}` token is replaced at render. */
-    ledeBefore: string;
-    ledeAfter: string;
+    /** Lede paragraphs, rendered one `<p>` each. */
+    lede: string[];
     ctaPrimary: string;
     ctaSecondary: string;
     caption: string;
@@ -66,6 +101,40 @@ export interface Copy {
     lede: string;
     areas: Array<[string, string, string]>;
   };
+  packages: {
+    kicker: string;
+    index: string;
+    title: string;
+    lede: string;
+    expandAll: string;
+    collapseAll: string;
+    labels: {
+      content: string;
+      result: string;
+      audience: string;
+      duration: string;
+      models: string;
+      investment: string;
+    };
+    items: Package[];
+  };
+  process: {
+    kicker: string;
+    index: string;
+    title: string;
+    lede: string;
+    steps: ProcessStep[];
+    cta: string;
+  };
+  systems: {
+    kicker: string;
+    index: string;
+    title: string;
+    lede: string;
+    list: string[];
+    asideA: string;
+    asideB: string;
+  };
   experience: {
     kicker: string;
     index: string;
@@ -77,15 +146,6 @@ export interface Copy {
     skills: string;
     parallel: string;
     jobs: Job[];
-  };
-  systems: {
-    kicker: string;
-    index: string;
-    title: string;
-    lede: string;
-    list: string[];
-    asideA: string;
-    asideB: string;
   };
   contact: {
     kicker: string;
