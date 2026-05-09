@@ -1,5 +1,6 @@
 ---
-import type { Copy } from "../i18n";
+import type { Copy, Locale } from "../i18n";
+import { homeUrl, packagesUrl } from "../i18n";
 
 interface Props {
   t: Copy;
@@ -7,17 +8,32 @@ interface Props {
 
 const { t } = Astro.props;
 const isEn = t.locale === "en";
+
+const rawPath = Astro.url.pathname || "/";
+const path = rawPath.endsWith("/") ? rawPath : `${rawPath}/`;
+
+// Map current path to its counterpart in the other locale. Default is the
+// other locale's home page, so an unknown path still has a sensible target.
+function urlFor(locale: Locale): string {
+  const enPkg = packagesUrl("en");
+  const dePkg = packagesUrl("de");
+  if (path === enPkg || path === dePkg) return packagesUrl(locale);
+  return homeUrl(locale);
+}
+
+const enHref = urlFor("en");
+const deHref = urlFor("de");
 ---
 
 <div class="lang-switch" role="group" aria-label={t.langSwitch.label}>
   <a
-    href="/"
+    href={enHref}
     class={isEn ? "is-active" : ""}
     aria-current={isEn ? "true" : undefined}
     data-set-lang="en">{t.langSwitch.en}</a>
   <span class="lang-divider" aria-hidden="true">·</span>
   <a
-    href="/de/"
+    href={deHref}
     class={!isEn ? "is-active" : ""}
     aria-current={!isEn ? "true" : undefined}
     data-set-lang="de">{t.langSwitch.de}</a>
